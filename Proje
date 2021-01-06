@@ -1,0 +1,902 @@
+/****************************************************************************
+**				SAKARYA ÜNİVERSİTESİ
+**		BİLGİSAYAR VE BİLİŞİM BİLİMLERİ FAKÜLTESİ
+**		    BİLGİSAYAR MÜHENDİSLİĞİ BÖLÜMÜ
+**	          PROGRAMLAMAYA GİRİŞİ DERSİ
+**
+**				ÖDEV NUMARASI....:Proje
+**				ÖĞRENCİ ADI......:Süleyman Arif Karakılıç
+**				ÖĞRENCİ NUMARASI.:b201210029
+**				DERS GRUBU.......:B
+****************************************************************************/
+
+#include <iostream>
+#include <iomanip>
+#include <conio.h>
+#include <locale.h>
+#include <ctime>
+#include "windows.h"
+#include <string>
+#include <fstream>
+#include <ctype.h>
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(disable : 4996)
+
+using namespace std;
+
+
+void AnaMenu(void);
+void okuyucuKaydi(void);
+void okuyucuGuncelle(void);
+void okuyucuSilme(void);
+void okuyucuKitapListe(void);
+void okuyucuKitapAlma(void);
+void okuyucuKitapVerme(void);
+void KitapEkleme(void);
+void KitapSilme(void);
+void KitapDüzeltme(void);
+void verigir(void);
+void oku_hepsini(void);
+void oku_tc(void);
+void cıkıs(void);
+
+char* zaman_al()//giris/cikis saatlerini yazdıran değer döndüren fonk.
+{
+	time_t noww = time(NULL);
+	char* simdi = ctime(&noww);
+
+	return simdi;
+}
+
+
+
+int main()
+{
+	int gecis;
+	setlocale(LC_ALL, "Turkish");
+	char selection;
+	string KullaniciAdiGiris, sifreGiris;
+	string kullaniciAdi, sifre;
+
+	cout << "Kullanıcı Adı Giriniz : ";
+	cin >> KullaniciAdiGiris;
+	cout << "Şifrenizi giriniz : ";
+	cin >> sifreGiris;
+	ifstream Dosya;
+	Dosya.open("Kullanici.txt", ios::in);//dosyadan gecerli kullanici adi ve sifreyi cekmek icin eger dosya yoksa olusturmaz sadece mevcut dosyadan ceker
+
+
+	while (Dosya >> kullaniciAdi >> sifre)
+	{
+
+		if (KullaniciAdiGiris == kullaniciAdi && sifreGiris == sifre)//kullanici adi ve sifre kontrol
+		{
+
+			system("CLS");
+			cout << "Sisteme giriş saatiniz : " << zaman_al() << endl;
+			gecis = 1;
+
+			ofstream kullanici_yaz("kullanici_kayıt.txt", ios::app);//giris saatini yazdırmak icin
+
+			kullanici_yaz << kullaniciAdi << "	" << zaman_al;
+			kullanici_yaz.close();
+
+		}
+
+	}
+	if (gecis == 1)//eger giris saglandiysa menüye girmek icin
+	{
+		while (true)
+		{
+			AnaMenu();
+			char selection;
+			cin >> selection;
+			switch (selection)//menü secimi
+			{
+			case '1':
+				okuyucuKaydi();
+				break;
+			case '2':
+				okuyucuGuncelle();
+				break;
+			case '3':
+				okuyucuSilme();
+				break;
+			case '4':
+				okuyucuKitapListe();
+				break;
+			case '5':
+				okuyucuKitapAlma();
+				break;
+			case '6':
+				okuyucuKitapVerme();
+				break;
+			case '7':
+				KitapEkleme();
+				break;
+			case '8':
+				KitapSilme();
+				break;
+			case '9':
+				KitapDüzeltme();
+				break;
+			case '0':
+				cıkıs();
+				break;
+			default:
+				cout << "Hatalı Giriş!";
+				break;
+			}
+			system("cls");
+		}
+	}
+
+
+	system("pause");
+	return 0;
+
+}
+
+void AnaMenu()//ana menü methodu
+{
+	string MenuItem[10];
+	MenuItem[0] = "1 Okuyucu kaydı\n";
+	MenuItem[1] = "2 Okuyucu kaydı güncelleme\n";
+	MenuItem[2] = "3 Okuyucu silme\n";
+	MenuItem[3] = "4 Okuyucu üzerindeki kitaplar listesi\n";
+	MenuItem[4] = "5 Okuyucu kitap ödünç alma\n";
+	MenuItem[5] = "6 Okuyucu kitap geri döndürme\n";
+	MenuItem[6] = "7 Kitap ekleme\n";
+	MenuItem[7] = "8 Kitap Silme\n";
+	MenuItem[8] = "9 Kitap düzeltme\n";
+	MenuItem[9] = "0 Çıkış\n";
+
+	for (int menu = 0; menu < 10; menu++)//menü secenekleri yazdıran döngü
+	{
+		cout << MenuItem[menu];
+	}
+	cout << "Yapmak İstediğiniz işlemi seçiniz : ";
+
+
+}
+
+void okuyucuKaydi(void)//okuyucu kaydi menüsü methodu
+{
+	char islem;
+
+	string MenuItem[3];
+	MenuItem[0] = " 1)Tüm Kayıtları Göster : \n ";
+	MenuItem[1] = "2)TC NO kayıt Sorgula : \n ";
+	MenuItem[2] = "3)SONLANDIR[S]  : \n ";
+
+	for (int menu = 0; menu < 3; menu++)//kayıt menüsünü yazdıran döngü
+	{
+		cout << MenuItem[menu];
+	}
+	cout << "[4] Yeni Kayıt Ekleme  [5] Ana Menü  " << endl;
+	cout << "Yapmak İstediğiniz İşlemi Seçiniz: ";
+
+
+	islem = getch();
+	switch (islem)//menü secim alani
+	{
+	case '1':
+		oku_hepsini();
+		break;
+	case '2':
+		oku_tc();
+		break;
+	case '4':
+		verigir();
+		break;
+	case '5':
+		AnaMenu();
+		return;
+		break;
+	case '0':
+		exit(1);
+		break;
+	default:
+		AnaMenu();
+		return;
+		break;
+	}
+
+}
+
+void okuyucuGuncelle(void)//okuyucu güncelleme methodu
+{
+	string o_tc;
+	system("CLS");
+	cout << "Güncellenecek kişinin TC numarasını giriniz : ";
+	cin >> o_tc;
+	fstream dosyaoku("okuyucu.txt", ios::in | ios::out);//dosyada yazılmak icin acildi
+	if (!dosyaoku)
+	{
+		system("CLS");
+		cerr << "Dosya açma hatası.Geri dönmek için bir tuşa basınız.";
+		AnaMenu();
+		return;//hata ciktisi
+	}
+	else
+	{
+		string tc_no, adı, soyadı, uye_no, tel, dg, gorev, kıtap_sayı;
+
+		string n_tc_no, n_adı, n_soyadı, n_uye_no, n_tel, n_dg, n_gorev, n_kıtap_sayı;
+		ofstream dosya("gecici_kayit.txt", ios::app);//gecis alanı olusturuldu
+		system("CLS");
+		while (dosyaoku >> tc_no >> adı >> soyadı >> uye_no >> tel >> dg >> gorev >> kıtap_sayı)
+		{
+			if (tc_no == o_tc)//girilen tc ile kayitta tc uyusursa
+			{
+				cout << "TC NO : " << tc_no << "\n" << " ADI : " << adı << "\n" << "SOYADI : " << soyadı << "\n" << "ÜYE NO : " << uye_no << "\n" << "TELEFON : " << tel << "\n" << "Doğum Tarihi : " << dg << "\n" << "GÖREVİ : " << gorev << "\n" << "KİTAP SAYISI : " << kıtap_sayı << endl;
+				cout << "\n\n Güncel verileri giriniz : " << endl;
+				cout << "\n TC NO : ";
+				cin >> n_tc_no;
+				if (n_tc_no.size() == 11)
+				{
+					cout << "ADI (İkinci ismi boşluk yerine nokta bırakrak yazınız.) : ";
+					cin >> n_adı;
+					cout << "Soyadı : ";
+					cin >> n_soyadı;
+					cout << "ÜYE NO : ";
+					cin >> n_uye_no;
+					cout << "TELEFON : +90 05";
+					cin >> n_tel;
+					cout << "DOĞUM TARİHİ (00/00/0000) : ";
+					cin >> n_dg;
+					cout << "GÖREV : ";
+					cin >> n_gorev;
+					cout << "KİTAP SAYISI : ";
+					cin >> n_kıtap_sayı;
+					tc_no = n_tc_no;
+					adı = n_adı;
+					soyadı = n_soyadı;
+					uye_no = n_uye_no;
+					tel = n_tel;
+					dg = n_dg;
+					gorev = n_gorev;
+					kıtap_sayı = n_kıtap_sayı;
+					dosya << tc_no << "\n" << adı << "\n" << soyadı << "\n" << uye_no << "\n" << tel << "\n" << dg << "\n" << gorev << "\n" << kıtap_sayı << endl;
+				}
+				else
+				{
+					cout << "\n" << "\n Girilen TC no 11 haneli olmalıdır!!" << endl;
+				}
+
+			}
+			else
+			{
+				dosya << tc_no << "\n" << adı << "\n" << soyadı << "\n" << uye_no << "\n" << tel << "\n" << dg << "\n" << gorev << "\n" << kıtap_sayı << endl;
+
+			}
+
+		}
+		cout << "\nAna Menüye dönmek için herhangi bir tuşa basınız...";
+		dosyaoku.close();
+		dosya.close();
+		system("del okuyucu.txt");//eski ana dosya silindi
+
+		rename("gecici_kayit.txt", "okuyucu.txt");//gecici dosya ana dosyaya donusturuldu  
+		getch();
+	}
+	AnaMenu();
+	return;
+}
+
+void okuyucuSilme(void)//silme methodu
+{
+	string sil_tc;
+	system("CLS");
+	cout << "Silinecek okuyucunun TC numarasını giriniz : ";
+	cin >> sil_tc;
+	fstream dosyaoku("okuyucu.txt", ios::in | ios::out);//dosya acıldı
+	if (!dosyaoku)
+	{
+		system("CLS");
+		cerr << "Dosya açma hatası.Geri dönmek için bir tuşa basınız.";
+		AnaMenu();//hata ciktisi
+		return;
+	}
+	else
+	{
+		string satir = "\n";
+		string dosyaD[15][8]; int satirNo = 0;
+		string tc_no, adı, soyadı, üye_no, tel, dg, görev, kıtap_sayı;;
+		ofstream dosya("gecici_ok_sil.txt", ios::app);//gecici dosya yazdırmak icin acıldı
+		system("CLS");
+		while (1)
+		{
+			dosyaoku >> tc_no >> adı >> soyadı >> üye_no >> tel >> dg >> görev >> kıtap_sayı;
+			if (dosyaoku.eof()) break;
+			if (tc_no != sil_tc)// eger tcler eslesmiyorsa gecici dosyaya yazdırılacak eslesiyorsa yazdırma olmayacak
+			{
+				dosyaD[satirNo][0] = tc_no;
+				dosyaD[satirNo][1] = adı;
+				dosyaD[satirNo][2] = soyadı;
+				dosyaD[satirNo][3] = üye_no;
+				dosyaD[satirNo][4] = tel;
+				dosyaD[satirNo][5] = dg;
+				dosyaD[satirNo][6] = görev;
+				dosyaD[satirNo][7] = kıtap_sayı;
+
+				satirNo++;
+
+			}
+
+		}
+		for (int i = 0; i < satirNo; i++)//satir dongusu saglandı
+			dosya << dosyaD[i][0] << satir << dosyaD[i][1] << satir << dosyaD[i][2] << satir << dosyaD[i][3] << satir << dosyaD[i][4] << satir << dosyaD[i][5] << satir << dosyaD[i][6] << satir << dosyaD[i][7] << satir;
+
+		cout << "\nAna Menüye dönmek için herhangi bir tuşa basınız...";
+		dosyaoku.close();
+		dosya.close();
+
+		remove("okuyucu.txt");//eski ana dosya silindi
+		rename("gecici_ok_sil.txt", "okuyucu.txt");//gecici dosya ana dosya yapıldı
+
+		getch();
+	}
+	AnaMenu();
+	return;
+}
+
+void okuyucuKitapListe(void)//secilen kisinin kitap listeleme methodu
+{
+	int sayac = 0;
+	string sorgu_tc;
+	system("CLS");
+	cout << "Okuyucu TC numarasını giriniz : ";
+	cin >> sorgu_tc;
+	ifstream dosyaoku("odunc.txt");//dosya okunmak icin acildi
+	if (!dosyaoku)//dosya okunmadigi takdirde hata dönecek
+	{
+		system("CLS");
+		cerr << "Dosya açma hatası.Geri dönmek için bir tuşa basınız.";
+		AnaMenu();
+		return;
+	}
+	else
+	{
+		string tc_no, ISBN, odunctarihi, donustarihi;
+		system("CLS");
+		while (dosyaoku >> ISBN >> tc_no >> odunctarihi >> donustarihi)//dosyadaki verileri okumak icin olustrulan döngü
+
+		{
+			if (tc_no == sorgu_tc)
+			{
+				sayac++;
+				cout << "ISBN : " << ISBN << endl;
+				cout << "Odünc Tarihi : " << odunctarihi << endl;
+				cout << "Dönüs Tarihi : " << donustarihi << endl;
+			}
+		}
+		if (sayac == 0)
+		{
+			cout << "Okuyucu üzerinde kitap bulunmamaktadır." << endl;
+		}
+	}
+	cout << "\nAna Menüye dönmek için herhangi bir tuşa basınız...";
+	getch();
+
+
+	return;
+
+}
+
+void okuyucuKitapAlma(void) //okuyucuya kitap verme methodu
+{
+	int sayac = 0;
+	int x = 0;
+	string al_tc;
+	system("CLS");
+	cout << "Kitabı alacak kişinin TC numarasını giriniz : ";
+	cin >> al_tc;
+	ifstream dosyaoku("okuyucu.txt", ios::in | ios::out);//dosya acıldı
+	ofstream dosyayaz1("gecici1.txt", ios::app);//guncelleme icin gecici dosya acıldı
+	if (!dosyaoku)
+	{
+		system("CLS");
+		cerr << "Dosya açma hatası.Geri dönmek için bir tuşa basınız.";
+		AnaMenu();//hata ciktisi
+		return;
+	}
+	else
+	{
+		string ISBN1, donustarihi, odunctarihi;
+		string ISBN, kitap_ad, yazar_ad, yazar_soyad, konu, tur, sayfa_sayi;
+		string tc_no, adı, soyadı, üye_no, tel, dg, görev;
+		int  kitap_sayi;
+		system("CLS");
+
+		while (dosyaoku >> tc_no >> adı >> soyadı >> üye_no >> tel >> dg >> görev >> kitap_sayi)//dosyadaki verileri okumak icin olustrulan döngü
+		{
+			if (tc_no == al_tc)//girilen tc ve dosyadaki tcn uyusuyorsa
+			{
+				sayac++;
+				cout << "\n---Odunc verilen dosya---\n" << endl;
+				cout << "ISBN		 :  "; cin >> ISBN1;
+
+				ifstream dosya0;//dosyada olan kitaplari okumak icin
+				dosya0.open("kitaplar.txt", ios::in);
+
+				while (dosya0 >> ISBN >> kitap_ad >> yazar_ad >> yazar_soyad >> konu >> tur >> sayfa_sayi)//dosyadaki verileri okumak icin olustrulan döngü
+				{
+
+
+					if (ISBN1 == ISBN)//girilen kitapla dosyadaki kitap uyusuyorsa
+					{
+						x++;
+						cout << "\nOdunc alinan kitaplar 14 gun icinde teslim edilmelidir!" << endl;
+						cout << "\nOdunc tarihi   :"; cin >> odunctarihi;
+						cout << "Donuc tarihi   :"; cin >> donustarihi;
+
+					}
+
+				}
+				dosya0.close();
+
+				if (x == 0)//eger kitap bulunmazsa
+				{
+					cout << "kayitli kitap bulunamadi!" << endl;
+					dosyayaz1 << tc_no << "\n" << adı << "\n" << soyadı << "\n" << üye_no << "\n" << tel << "\n" << dg << "\n" << görev << "\n" << kitap_sayi << endl;
+					dosyayaz1.close();
+					dosyaoku.close();
+
+				}
+
+				if (x != 0)//eger kitap eslesmesi saglandıysa
+				{
+
+					dosyayaz1 << tc_no << "\n" << adı << "\n" << soyadı << "\n" << üye_no << "\n" << tel << "\n" << dg << "\n" << görev << "\n" << kitap_sayi - 1 << endl; // her odunc kitap aldiginda alabilecegi odunc kitap sayisi 1 azalir
+
+
+					ofstream DosyaYaz;//dosyaya yazdırmak icin acıldı
+					DosyaYaz.open("odunc.txt", ios::app);
+
+					DosyaYaz << ISBN1 << "\n" << tc_no << "\n" << odunctarihi << "\n" << donustarihi << "\n";//dosyaya yazdırıldı
+
+
+					DosyaYaz.close();
+					cout << "\n--->Kayit olusturuldu." << endl;
+
+					sayac = 1; // bu degerin 1 olmasi okuyucunun oldugunu belirtir
+
+					continue;
+
+				}
+
+			}
+		}
+		if (tc_no != al_tc)//girilen tc ile okunan tc uyusmazsa islem yapmadan cik
+		{
+			dosyayaz1 << tc_no << "\n" << adı << "\n" << soyadı << "\n" << üye_no << "\n" << tel << "\n" << dg << "\n" << görev << "\n" << kitap_sayi << endl;
+		}
+
+
+		dosyayaz1.close();
+		dosyaoku.close();
+
+		remove("okuyucu.txt");  // gecici dosyadakiler asil dosyaya cevriliyor
+		rename("gecici1.txt", "okuyucu.txt"); //dosya isim degisikligi
+
+		if (sayac == 0)//eger okuyucu bulunmazsa
+		{
+			cout << "\n Okuyucu bulunamadi !" << endl;
+		}
+
+	}
+}
+
+void okuyucuKitapVerme(void)
+{
+	int sayac1 = 0;
+	int sayac2 = 0;
+	string ver_tc;
+	string ver_isbn;
+	system("CLS");
+	cout << "Kitabı verecek kişinin TC numarasını giriniz : ";
+	cin >> ver_tc;
+	cout << "Aldığınız kitabın ISBN numarasını giriniz : ";
+	cin >> ver_isbn;
+
+	ifstream dosyaoku("odunc.txt", ios::in | ios::out);//dosya acıldı
+	ofstream dosyayaz("gecici_sill.txt", ios::app);//guncelleme icin gecici dosya acıldı
+	if (!dosyaoku)//dosya okunmazsa
+	{
+		system("CLS");
+		cerr << "Dosya açma hatası.Geri dönmek için bir tuşa basınız.";
+		AnaMenu();
+		return;
+	}
+	else
+	{
+		string ISBN1, donustarihi, odunctarihi;
+		string ISBN, kitap_ad, yazar_ad, yazar_soyad, konu, tur, sayfa_sayi;
+		string tc_no, adı, soyadı, üye_no, tel, dg, görev;
+		int  kitap_sayi;
+		system("CLS");
+		while (dosyaoku >> ISBN1 >> tc_no >> odunctarihi >> donustarihi)//dosyadaki verileri okumak icin olustrulan döngü
+		{
+			if (ISBN1 != ver_isbn) // silinmek istenen kitap disindakiler gecici dosyaya yazilir
+			{
+				dosyayaz << ISBN1 << "\n" << tc_no << "\n" << odunctarihi << "\n" << donustarihi << "\n";
+			}
+
+			if (ISBN1 == ver_isbn)
+			{
+				sayac1++;
+				cout << "\n Odunc kitap teslim edildi." << endl;
+			}
+		}
+		dosyayaz.close();
+		dosyaoku.close();
+
+		remove("odunc.txt");
+		rename("gecici_sill.txt", "odunc.txt");
+
+		if (sayac1 == 0) //kitap kaydi bulunamazsa
+		{
+			cout << "Odunc kitap kaydi bulunamadi!" << endl;
+		}
+		if (sayac1 != 0) // sayac degerinin 0 olmamasi odunc alinmis kitap oldugunu gosterir
+		{
+			ifstream Dosya("okuyucu.txt", ios::in);
+			ofstream gecici1("gecici1.txt", ios::app);
+
+			while (dosyaoku >> tc_no >> adı >> soyadı >> üye_no >> tel >> dg >> görev >> kitap_sayi)//dosyadaki verileri okumak icin olustrulan döngü
+			{
+				if (tc_no == ver_tc)//girilen değerle okuyucudaki esitse yazdir
+				{
+
+					dosyayaz << tc_no << "\n" << adı << "\n" << soyadı << "\n" << üye_no << "\n" << tel << "\n" << dg << "\n" << görev << "\n" << kitap_sayi + 1 << endl; // okuyucu kitabi teslim ettigi icin alabilecegi kitap sayisi 1 artar
+
+					continue;
+				}
+				if (tc_no != ver_tc)
+				{
+					dosyayaz << tc_no << "\n" << adı << "\n" << soyadı << "\n" << üye_no << "\n" << tel << "\n" << dg << "\n" << görev << "\n" << kitap_sayi << endl;
+				}
+			}
+			gecici1.close();
+			Dosya.close();
+
+			remove("okuyucu.txt");  // gecici dosyadakiler asil dosyaya cevriliyor
+			rename("gecici1.txt", "okuyucu.txt"); //dosya isim degisikligi
+		}
+
+
+
+
+
+	}
+}
+
+void KitapEkleme(void)//kitap ekleme methodu
+{
+	struct kıtap
+	{
+		string ISBN, kitap_ad, yazar_ad, yazar_soyad, konu, tur, sayfa_sayi;
+	}yeniK;
+	char x = 'E';
+	try
+	{
+		ofstream dosyayayaz("Kitaplar.txt", ios::app);//yazdırmak icin dosya acildi
+		if (!dosyayayaz)
+		{
+			system("CLS");
+			cerr << "Dosya açılamadı. Ana menüye dönmek için bir tuşa basınız.";
+			getch();//hata cikitsi
+			return;
+		}
+		else
+		{
+			while (x == 'E')
+			{
+
+				cout << "ISBN : ";
+				cin >> yeniK.ISBN;
+				cout << "KİTAP İSMİ (İkinci ismi boşluk yerine nokta bırakrak yazınız.) : ";
+				cin >> yeniK.kitap_ad;
+				cout << "YAZAR ADI (İkinci ismi boşluk yerine nokta bırakrak yazınız.) : ";
+				cin >> yeniK.yazar_ad;
+				cout << "YAZAR SOYADI : ";
+				cin >> yeniK.yazar_soyad;
+				cout << "Konu (İkinci ismi boşluk yerine nokta bırakrak yazınız.) : ";
+				cin >> yeniK.konu;
+				cout << " TÜR : ";
+				cin >> yeniK.tur;
+				cout << "SAYFA SAYISI : ";
+				cin >> yeniK.sayfa_sayi;
+				cout << endl;
+				cout << "bitirmek için x enter yapınız." << endl;
+				cin >> x;
+
+				dosyayayaz << yeniK.ISBN << "\n" << yeniK.kitap_ad << "\n" << yeniK.yazar_ad << "\n" << yeniK.yazar_soyad << "\n" << yeniK.konu << "\n" << yeniK.tur << "\n" << yeniK.sayfa_sayi << endl;
+			}
+			dosyayayaz.close();
+		}
+	}
+	catch (exception& e)
+	{
+		system("CLS");
+		cout << "Bilinmeyen bir hata oluştu.Ana menüye dönmek için bir tuşa basınız.";
+		getch();//yazdırmadan sonra hata ciktisi
+		return;
+	}
+	return;
+
+}
+
+void KitapSilme(void)// kitap silme methodu
+{
+	string k_ısbn;
+	system("CLS");
+	cout << "Silinecek kitabın ISBN numarasını giriniz : ";
+	cin >> k_ısbn;
+	fstream dosyaoku("Kitaplar.txt", ios::in | ios::out);//okunmak icin dosya acilidi
+	if (!dosyaoku)//eger dosya acilmazsa hata donecek
+	{
+		system("CLS");
+		cerr << "Dosya açma hatası.Geri dönmek için bir tuşa basınız.";
+		AnaMenu();
+		return;
+	}
+	else
+	{
+		string satir = "\n";
+		string dosyaD[15][7]; int satirNo = 0;
+		string ISBN, kitap_ad, yazar_ad, yazar_soyad, konu, tur, sayfa_sayi;
+		ofstream dosya("gecici_k_s.txt", ios::app);//gecici gecis dosyasi acildi
+		system("CLS");
+		while (1)
+		{
+			dosyaoku >> ISBN >> kitap_ad >> yazar_ad >> yazar_soyad >> konu >> tur >> sayfa_sayi;//dosyadaki verileri okumak icin olustrulan döngü
+			if (dosyaoku.eof()) break;//döngüden cikmak icin
+			if (ISBN != k_ısbn)//silinecek kitabin gecici dosyaya yazilmasi icin
+			{
+				dosyaD[satirNo][0] = ISBN;
+				dosyaD[satirNo][1] = kitap_ad;
+				dosyaD[satirNo][2] = yazar_ad;
+				dosyaD[satirNo][3] = yazar_soyad;
+				dosyaD[satirNo][4] = konu;
+				dosyaD[satirNo][5] = tur;
+				dosyaD[satirNo][6] = sayfa_sayi;
+
+				satirNo++;
+
+			}
+
+		}
+		for (int i = 0; i < satirNo; i++)//satir döngüsünü saglamak icin
+			dosya << dosyaD[i][0] << satir << dosyaD[i][1] << satir << dosyaD[i][2] << satir << dosyaD[i][3] << satir << dosyaD[i][4] << satir << dosyaD[i][5] << satir << dosyaD[i][6] << satir;//dosyaya veri yazdırmak icin olustrulan döngü
+
+		cout << "\nAna Menüye dönmek için herhangi bir tuşa basınız...";
+		dosyaoku.close();
+		dosya.close();
+		system("del Kitaplar.txt");
+
+		remove("Kitaplar.txt");
+		rename("gecici_k_s.txt", "Kitaplar.txt");
+
+		getch();
+	}
+	AnaMenu();
+	return;
+
+}
+
+void KitapDüzeltme(void)//düzeltme methodu
+
+{
+	string k_ısbn;
+	system("CLS");
+	cout << "Güncellenecek kitabın ISBN numarasını giriniz : ";
+	cin >> k_ısbn;
+	fstream dosyaoku("Kitaplar.txt", ios::in | ios::out);//dosyadaki verileri okumak icin acildi
+	if (!dosyaoku)//dosya okunmazsa
+	{
+		system("CLS");
+		cerr << "Dosya açma hatası.Geri dönmek için bir tuşa basınız.";
+		AnaMenu();
+		return;
+	}
+	else
+	{
+		string  ISBN, kitap_ad, yazar_ad, yazar_soyad, konu, tur, sayfa_sayi;
+		string n_ISBN, n_kitap_ad, n_yazar_ad, n_yazar_soyad, n_konu, n_tur, n_sayfa_sayi;
+		ofstream dosya("gecici_k.txt", ios::app);//dosyaya veri yazdirmak icin 
+		system("CLS");
+		while (dosyaoku >> ISBN >> kitap_ad >> yazar_ad >> yazar_soyad >> konu >> tur >> sayfa_sayi)//eger dosya okunmazsa
+		{
+
+			if (ISBN == k_ısbn)//yazılan ısbnle ile dosyadaki kitap uyuyorsa islem icin
+			{
+				cout << "ISBN : " << k_ısbn << "\n" << " KİTAP İSMİ : " << kitap_ad << "\n" << "YAZAR ADI : " << yazar_ad << "\n" << "YAZAR SOYADI : " << yazar_soyad << "\n" << "KONU : " << konu << "\n" << "TÜR : " << tur << "\n" << "SAYFA SAYISI : " << sayfa_sayi << endl;
+				cout << "\n\n Güncel verileri giriniz : " << endl;
+				cout << "\n ISBN : ";
+				cin >> n_ISBN;
+				cout << "KİTAP İSMİ (İkinci ismi boşluk yerine nokta bırakrak yazınız.) : ";
+				cin >> n_kitap_ad;
+				cout << "YAZAR ADI (İkinci ismi boşluk yerine nokta bırakrak yazınız.)  : ";
+				cin >> n_yazar_ad;
+				cout << "YAZAR SOYADI: ";
+				cin >> n_yazar_soyad;
+				cout << "KONU : ";
+				cin >> n_konu;
+				cout << "TÜR : ";
+				cin >> n_tur;
+				cout << " SAYFA SAYISI : ";
+				cin >> n_sayfa_sayi;
+				ISBN = n_ISBN;
+				kitap_ad = n_kitap_ad;
+				yazar_ad = n_yazar_ad;
+				yazar_soyad = yazar_soyad;
+				konu = n_konu;
+				tur = n_tur;
+				sayfa_sayi = n_sayfa_sayi;
+
+				dosya << k_ısbn << "\n" << kitap_ad << "\n" << yazar_ad << "\n" << yazar_soyad << "\n" << konu << "\n" << tur << "\n" << sayfa_sayi << endl;//dosyaya veri yazdirmak icin olustrulan döngü
+
+			}
+			else
+			{
+				dosya << ISBN << "\n" << kitap_ad << "\n" << yazar_ad << "\n" << yazar_soyad << "\n" << konu << "\n" << tur << "\n" << sayfa_sayi << endl;//dosyaya veri yazdirmak icin olustrulan döngü
+			}
+
+		}
+
+		cout << "\nAna Menüye dönmek için herhangi bir tuşa basınız...";
+		dosyaoku.close();
+		dosya.close();
+		system("del Kitaplar.txt");
+
+		rename("gecici_k.txt", "Kitaplar.txt");
+		getch();
+	}
+	AnaMenu();
+	return;
+}
+
+void verigir(void)//verigirme methodu(okuyucu icin)
+{
+	struct okuyucu
+	{
+
+		string tc_no, adı, soyadı, üye_no, tel, dg, görev, kıtap_sayı;
+	}yeniO;
+	char x = 'E';
+	try
+	{
+		ofstream dosyayayaz("okuyucu.txt", ios::app);//dosyaya veri yazdırmak icin olustrulan döngü
+		if (!dosyayayaz)//eger dosyaya ulasılamazsa
+		{
+			system("CLS");
+			cerr << "Dosya açılamadı. Ana menüye dönmek için bir tuşa basınız.";
+			getch();
+			return;
+		}
+		else
+		{
+			while (x == 'E')//yazdırma döngüsüne giris
+			{
+				cout << endl;
+				cout << "TC NO : ";
+				cin >> yeniO.tc_no;
+				if (yeniO.tc_no.size() == 11)
+				{
+					cout << "Adı (İkinci ismi boşluk yerine nokta bırakrak yazınız.) : ";
+					cin >> yeniO.adı;
+					cout << "SOYADI : ";
+					cin >> yeniO.soyadı;
+					cout << "ÜYE NO : ";
+					cin >> yeniO.üye_no;
+					cout << "TELEFON : +90 05";
+					cin >> yeniO.tel;
+					cout << " DOĞUM TARİHİ (00/00/0000) : ";
+					cin >> yeniO.dg;
+					cout << "GÖREVİ : ";
+					cin >> yeniO.görev;
+					cout << "KİTAP SAYISI : ";
+					cin >> yeniO.kıtap_sayı;
+					cout << "\n";
+					cout << "bitirmek için x enter yapınız." << endl;
+					cin >> x;
+
+					dosyayayaz << yeniO.tc_no << "\n" << yeniO.adı << "\n" << yeniO.soyadı << "\n" << yeniO.üye_no << "\n" << yeniO.tel << "\n" << yeniO.dg << "\n" << yeniO.görev << "\n" << yeniO.kıtap_sayı<<endl;//dosyaya veri yazdırmak icin olustrulan döngü
+				}
+				else
+				{
+					cout << "\a" << "\n Girilen TC no 11 haneli olmalıdır!!" << endl;
+				}
+			}
+			dosyayayaz.close();
+		}
+	}
+	catch (exception& e)
+	{
+		system("CLS");
+		cout << "Bilinmeyen bir hata oluştu.Ana menüye dönmek için bir tuşa basınız.";
+		getch();
+		return;
+	}
+	return;
+}
+
+void oku_hepsini(void)//butun kayitlari okuma methodu
+{
+	ifstream dosyaoku("okuyucu.txt", ios::in);//dosyadaki verileri okumak icin olustrulan döngü
+	if (!dosyaoku)//dosya okunmazsa
+	{
+		system("CLS");
+		cerr << "Dosya açma hatası.Geri dönmek için bir tuşa basınız.";
+		AnaMenu();
+		return;
+	}
+	else
+	{
+		string tc_no, adı, soyadı, üye_no, tel, dg, görev, kıtap_sayı;
+		system("CLS");
+		while (!dosyaoku.eof())
+		{
+			dosyaoku >> tc_no >> adı >> soyadı >> üye_no >> tel >> dg >> görev >> kıtap_sayı;//dosyaya verileri yazdırmak icin olustrulan döngü
+			if (!dosyaoku)break;//döngüden cikmak icin
+			cout << "TC NO : " << tc_no << "\n" << " ADI : " << adı << "\n" << "SOYADI : " << soyadı << "\n" << "ÜYE NO : " << üye_no << "\n" << "TELEFON : +90 05" << tel << "\n" << "Doğum Tarihi : " << dg << "\n" << "GÖREVİ : " << görev << "\n" << "KİTAP SAYISI : " << kıtap_sayı << "\n" << endl;
+		}
+	}
+	cout << "\nAna Menüye dönmek için herhangi bir tuşa basınız...";
+	getch();
+
+	dosyaoku.close();
+	return;
+}
+
+void oku_tc(void)//tcye gore okuma methodu
+{
+	string o_tc;
+	system("CLS");
+	cout << "Okuyucu TC NOsu giriniz : ";
+	cin >> o_tc;
+	ifstream dosyaoku("okuyucu.txt", ios::in); //dosyadaki verileri okumak icin olustrulan döngü
+	if (!dosyaoku)//dosya okunmazsa
+	{
+		system("CLS");
+		cerr << "Dosya açma hatası.Geri dönmek için bir tuşa basınız.";
+		AnaMenu();
+		return;
+	}
+	else
+	{
+		string tc_no, adı, soyadı, üye_no, tel, dg, görev, kıtap_sayı;
+		system("CLS");
+		while (!dosyaoku.eof())//dosya islem sonuna gelmemisse
+		{
+			dosyaoku >> tc_no >> adı >> soyadı >> üye_no >> tel >> dg >> görev >> kıtap_sayı; //dosyaya veri yazdirmak icin
+			if (!dosyaoku)break;//donguden cikmak icin
+			if (tc_no == o_tc)//girilenle ile sistemdeki eslesiyorsa
+			{
+				cout << "TC NO : " << tc_no << "\n" << " ADI : " << adı << "\n" << "SOYADI : " << soyadı << "\n" << "ÜYE NO : " << üye_no << "\n" << "TELEFON : +90 05" << tel << "\n" << "Doğum Tarihi : " << dg << "\n" << "GÖREVİ : " << görev << "\n" << "KİTAP SAYISI : " << kıtap_sayı << endl;
+			}
+		}
+	}
+	cout << "\nAna Menüye dönmek için herhangi bir tuşa basınız...";
+	getch();
+
+	dosyaoku.close();
+	return;
+
+}
+
+void cıkıs(void)//cikis methodu
+{
+
+	cout << "\nSistemden çıkış saatiniz : " << zaman_al() << endl;
+	ofstream kullanici_yaz("kullanici_kayıt.txt", ios::app); //saati yazdirmak icin 
+
+	kullanici_yaz << "	" << zaman_al << "	" << endl;
+	kullanici_yaz.close();
+
+
+	system("EXIT");
+	exit(1);
+}
