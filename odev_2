@@ -1,0 +1,186 @@
+/****************************************************************************
+**				SAKARYA ÜNİVERSİTESİ
+**		BİLGİSAYAR VE BİLİŞİM BİLİMLERİ FAKÜLTESİ
+**		    BİLGİSAYAR MÜHENDİSLİĞİ BÖLÜMÜ
+**	          PROGRAMLAMAYA GİRİŞİ DERSİ
+**
+**				ÖDEV NUMARASI....:1
+**				ÖĞRENCİ ADI......:Süleyman Arif Karakılıç
+**				ÖĞRENCİ NUMARASI.:b201210029
+**				DERS GRUBU.......:B
+****************************************************************************/
+
+#include <iostream>
+#include <Windows.h>
+
+using namespace std;
+void gotoxy(int x, int y);
+
+class cati
+{
+public:
+	int x;
+	int y;
+	int w;
+	int h;
+
+	void olustur(int x, int  y, int w, int h)
+	{
+		this->x = x;
+		this->y = y;
+		this->w = w;
+		this->h = h;
+	}
+	void ciz()
+	{
+		for (int satir = 0; satir < h; satir++) //Catinin genisligini yazdırmak icin
+		{
+			gotoxy(x + h - 1 - satir, y + satir);
+
+			for (int sutun = 0; sutun < w - 2 * (h - 1 - satir); sutun++)//catinin yüksekliğini yazdırmak için
+				cout << char(42);
+			Sleep(30);
+		}
+	}
+
+};
+
+class kat
+{
+public:
+	int x;
+	int y;
+	int w;
+	int h;
+
+	void olustur(int x, int y, int w, int h)
+	{
+		this->x = x;
+		this->y = y;
+		this->w = w;
+		this->h = h;
+	}
+
+	void ciz()
+	{
+		for (int i = 0; i < w; i++)
+		{
+			gotoxy(x + i, y);//evin tavanini çizdirmek icin
+			cout << char(219);
+			Sleep(30);
+		}
+
+		for (int genislik = 0; genislik < h; genislik++) {// evin temel yapısını zidrimek için
+			gotoxy(x, y + 1 + genislik);
+			cout << char(219);// sol duvarı yazdırmak icin
+			Sleep(30);
+
+			gotoxy(x + w - 1, y + 1 + genislik); // duvarlar arasindaki bosluğu olusturmak icin
+
+			cout << char(219);// sag duvarı yazdırmak icin
+			Sleep(30);
+		}
+
+		for (int i = 0; i < w; i++) // evin tabanini cizer 
+		{
+			gotoxy(x + i, y + h);
+			cout << char(219);
+			Sleep(30);
+		}
+
+	}
+};
+
+class kapi
+{
+public:
+	int x;
+	int y;
+	int w;
+	int h;
+
+	void kapiOlustur(int x, int y, int w, int h) {
+		this->x = x;
+		this->y = y;
+		this->w = w;
+		this->h = h;
+	}
+
+	void ciz() {
+		for (int satir = 0; satir < h; satir++) //kapiyi yazdırmak icin olusan genislik ve yukseklik 
+		{
+			gotoxy(x, y + satir);
+			for (int sutun = 0; sutun < w; sutun++)
+				cout << "#";
+			Sleep(30);
+		}
+	}
+};
+
+class ev
+{
+
+public:
+	cati cati;
+	kat kati;
+	kapi kapi;
+	int x;
+	int y;
+	int genislik;
+	int yukseklik;
+	int catiYukseklik;
+
+
+
+	void olustur()
+	{
+		cati.olustur(x, y, genislik, catiYukseklik);
+		kati.olustur(x, y + catiYukseklik, genislik, yukseklik);
+		kapi.kapiOlustur(x + genislik / 2, y + catiYukseklik + yukseklik - yukseklik / 2 + 1, genislik / 3, yukseklik / 2);
+
+	}
+	void bilgiGir()
+	{
+		cout << "Genislik degerini giriniz		: ";
+		cin >> genislik;
+		cout << "yukseklik degerini giriniz		: ";
+		cin >> yukseklik;
+		cout << "Cati Yuksekligini giriniz		: ";
+		cin >> catiYukseklik;
+		cout << "x eksinini giriniz		: ";
+		cin >> x;
+		cout << "y eksenini giriniz		: ";
+		cin >> y;
+	}
+
+	void ciz()
+	{
+		cati.ciz();
+		kati.ciz();
+		kapi.ciz();
+	}
+
+
+};
+
+int main()
+{
+
+	ev evim;
+	evim.bilgiGir();
+	evim.olustur();
+	evim.ciz();
+
+	gotoxy(0, evim.y + evim.cati.h + evim.kati.h + 1);
+
+	cin.get();
+	return 0;
+}
+
+void gotoxy(int x, int y)
+{
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
