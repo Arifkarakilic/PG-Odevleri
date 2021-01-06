@@ -1,0 +1,77 @@
+/****************************************************************************
+**				SAKARYA ÜNİVERSİTESİ
+**		BİLGİSAYAR VE BİLİŞİM BİLİMLERİ FAKÜLTESİ
+**		    BİLGİSAYAR MÜHENDİSLİĞİ BÖLÜMÜ
+**	          PROGRAMLAMAYA GİRİŞİ DERSİ
+**
+**				ÖDEV NUMARASI....:1
+**				ÖĞRENCİ ADI......:Süleyman Arif Karakılıç
+**				ÖĞRENCİ NUMARASI.:b201210029
+**				DERS GRUBU.......:B
+****************************************************************************/
+#include <iostream>
+#include <string>
+#include <locale.h>
+
+using namespace std;
+
+
+struct Zaman
+{	
+	int saat;
+	int dakika;
+	int saniye;
+	long toplam_saniye;
+
+};
+
+int main()
+{
+    int hata = 0;
+	char ch;
+	Zaman time1;
+	setlocale(LC_ALL, "Turkish");
+
+
+	
+	
+	cout << "Saat : Dakika : Saniye giriniz : ";
+	cin >> time1.saat >> ch >> time1.dakika >> ch >> time1.saniye;
+
+		//Saatin 0 ve 24 arasındaki değerler dışında hata vermesi için oluşan hata bloğu
+		if (time1.saat > 23 || time1.saat < 0  )
+	{
+		hata = 1;
+		cout << "Girilen saat değeri " << time1.saat << " yanlış girilmiştir."<<endl;
+	}
+		//Dakika değişkeninin 0 ve 60 değerleri dışında hata vermesi için oluşan hata bloğu
+		if (59 < time1.dakika || 0 > time1.dakika  )
+	{	
+		hata = 1;
+		cout << "Girilen dakika değeri " << time1.dakika << " yanlış girilmiştir."<<endl;
+	}
+		//Saniye değişkeninin 0 ve 60 değerleri dışında hata vermesi için oluşan hata bloğu
+		if (59 < time1.saniye || 0 > time1.saniye )
+	{
+		hata = 1;
+		cout << "Girilen saniye değeri " << time1.saniye << " yanlış girilmiştir." << endl;
+	}
+		//Hata olmaması durumunda çıktıyı almak için olan if bloğu
+		if (hata == 0)
+	{
+
+		long toplam_saniye = time1.saat * 3600 + time1.dakika * 60 + time1.saniye;
+		cout << "Saniye olarak hesaplana değer : " << toplam_saniye << endl;
+	}
+	
+	
+	
+
+
+
+
+
+
+	system("pause");
+	return 0;
+}
